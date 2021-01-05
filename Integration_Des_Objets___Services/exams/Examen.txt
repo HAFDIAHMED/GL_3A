@@ -1,0 +1,88 @@
+﻿EX2
+
+1-
+module ParkingPkg{
+	struct Ticket{
+	long numTicket ; 
+	string heureEntree ; 
+	}
+
+	interface BarriereItf{
+	boolean entrer(out Ticket _ticket);
+	boolean sortir(in Tichet _ticket);
+	};
+
+	interface AutomateItf{
+	boolean payer(in Ticket _ticket,in double montant,out rendre);
+	boolean cestpaye(in Ticket _ticket);
+	};
+	interface ParkingItf{
+	long nbPlacesLibres();
+	void entreeVehicule();
+	void sortieVehicule();
+	};
+}
+
+2-
+L'objet CORBA doit intteroger l'objet Parking pour savoir est ce qu'il y a une place libre dans le parking affin de laisser entrer l'automobiliste.
+la methode invoquée est nbPlacesLibres() .
+
+3-
+il modifier le nbr des places libres dans le parking 
+lorsque la methode entreevehicule est invoquée le nbr de place libre devient (nbrplaceLibre - 1) 
+4-
+Sénario de la sortie de vehicule 
+- lorsque l'automobiliste veut sortir il présent à la barier et il déspose leur Ticket 
+- l'objet barrier invoque la methode sortir en lui donant une parametre d'enter le ticket déposer par l'automobiliste
+- la methode sortir de l'objet Barrier fait appelle à la méthode cestpaye de l'objet Automate
+- la methode cestpaye demande a l'utilisateur de payer et fait appelle à la methode payer du même objet 
+- à partir de Ticket la methode compare le montant introduit par l'automobiliste et la valeur exacte à payer 
+- si le montant introduit est insuffaissant la methode payer returne faux, par la suite la methode cestpaye retourne aussi faux et par conséquence la méthde sortir du parking retourn faux => l'automobiliste n'est pas autorisé à sortir
+- si le montant est suffaissant la methode paye renvoie le montant à rendre la méthode cestpaye return vrai par la suite la methode sortir fait appelle à la methode sortirvehicule de l'objet parking et return en fin true => l'automobiliste est autorisé de sortir
+
+
+5-
+package ParkingPkg;
+
+public classe ParkingImp implements ParkingItfPOA{
+	
+	public static finale nbplace; 
+	public int  nbPlacesLibres(){
+	return nbplace;
+	}
+	public void entreeVehicule(){
+	this.nbplace--;
+	}
+	void sortieVehicule(){
+	this.nbplace++;
+	}
+	public ParkingImp(int nb){
+	this.nbpalce = nb;
+	}
+}
+
+6-
+package BarrierImp;
+
+public classe BarrierImp implements BarrierItfPOA{
+	ParkingImp p;
+	public BarrierImp(50){
+	p = new ParkingImp(50);
+	}
+	public boolean entrer(TicketHolder _ticket){
+
+		if( p.nbrplace>0)
+		{
+		p.entreeVehicule();
+		return true;
+		}
+		return false;
+	}
+	public boolean sortir(Ticket _ticket){
+	if (cestpaye(_ticket))
+	{
+		p.sortieVehicule();
+		return true;
+	}
+	return false;
+}

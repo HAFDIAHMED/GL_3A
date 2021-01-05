@@ -1,0 +1,8 @@
+module calcul {
+ 
+    interface calcul_montants {
+        double calcul_ttc (in double mt_ht, in double taux); 
+    };
+
+};
+

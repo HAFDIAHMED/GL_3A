@@ -1,0 +1,103 @@
+OMG: object management group
+	fournit un ensemble de spécifications pour l''intégration des applications réparties,hétérogènes
+
+CORBA(Common Object Request Broker Architecture):
+	ensemble de spécifications et de recommandations rédigées par l’OMG permettre à des applications actives sur différentes machines d’un environnement réparti hétérogène de coopérer au travers d’objets répartis.
+
+Hétérogénéité:
+	faire communiquer des systèmes et intégrer des composants d’origines diverses
+	Portabilité:application développée sur une machine peut s’exécuter sur une autre machine sans réécriture
+
+Interopérabilité:
+	des composants d’une application répartie doivent communiquer même s’ils s’exécutent sur des systèmes hétérogènes
+   
+OMA : Object Management Architecture
+	  définit un modèle général pour les systèmes distribués orientés objet
+   
+Le modèle de référence: 
+	identifie et classifie les différents types d’objets constituant un système réparti objet on trouve:
+	ORB,Common Object Services,Common Object Facilities,Domain Objects,Application objects
+
+Réferentiel d'interfaces(IR): 
+	stocke toutes les définitions IDL des interfaces des objets du bus, des méthodes qu’ils supportent et des paramètres qu’ils nécessitent.
+
+ImpIR(référentiel d’implantations)
+	contient les informations nécessaires décrivant l’implantation des objets
+
+ORB:Object Request Broker
+transport les requettes vers le serveur et les résultats vers le client en milieu
+hétérogène.
+IIOP : Internet Inter-ORB Protocol
+	protocole de communication de type requête-réponse,résout le problème de  l'interopérabilité.
+L'adaptateur d'objets (Object Adapter) POA ou BOA
+– permet l’adaptation à la nature des objets implantés
+– gère les différents objets qui se situent à l'intérieur de l'application serveur. 
+
+IOR(Interoperable Object Reference)
+	séquence unique d’octets identifiant l’objet chez le serveur
+
+*SII (Static Invocation Interface) mécanisme d'interfaçage statique,permettant de soumettre des requêtes contrôlées à la compilation des programmes
+*SSI (Skeleton Static Interface) est l’interface de squelettes statiques qui permet à l’implantation des objets de recevoir les requêtes leur étant destinées 
+*DII (Dynamic Invocation Interface) permet à une application cliente d’invoquer
+dynamiquement les opérations des objets sans utiliser les stubs IDL prégénérés.
+*DSI (Dynamic Skeleton Interface)  mécanisme d'interfaçage dynamique
+fournit un mécanisme de liaison dynamique pour les serveurs ayant besoin de gérer des appels de méthodes pour des objets n’ayant pas de squelettes compilés (skeleton)
+
+IOR:séquence unique d’octets identifiant l’objet chez le serveur
+
+resolve_initial_references( in ObjectId Ident) : 
+ •  retourne la réference d’obj CORBA associée au service identifié,
+
+
+*Mentionner et comparer les différentes façons qu'a un client CORBA pour obtenir la référence d'un servant CORBA ?
+1-Diffusion de l’IOR non gérée par le bus :
+---> Problèmes :
+	Ne supporte pas le cas où le serveur support plusieurs servants
+	Ne peut pas supporter l’accès de plusieurs instances de serveurs au même fichier partagé de références
+2-Utilisation du service de nommage
+	Permet la désignation d’objets CORBA à l’aide de noms
+	Equivalent à la notion de path
+	Peut être persistent
+	Adapté à tout les cas de figure non supportés par la diffusion non gérée par le bus
+*Le langage IDL ne contient aucune instruction d'affectation. Pourquoi?
+Car IDL est langage déclaratif et non un langage de programmation
+
+Liste des fichiers .java générés automatiquement par la compilation Java:
+	<Type>Operation.java,<Type>.java,<Type>Stub.java,<Type>Helper.java,<Type>Holder.java,
+	<Type>POA.java
+Liste des fichiers .java développés :
+<Type>Imp.java,Serveur.java,Client.java
+Exemple IDL:
+	module date { struct Date {…} ; }; 
+	module monApplication {interface monService { date::Date retourner_date_courante();};};
+mode de passage des paramètres
+in : le paramètre est transmis vers l’objet
+out : le paramètre est transmis par l’objet
+inout : échange dans les 2 sens
+Que doit faire le code serveur ?
+ Initialiser son environnement d’exécution :Initialiser l’ORB et l’adaptateur d’objets
+ Rendre les objets servants publics :Exporter leurs IOR
+ Attendre les requêtes des clients
+ Arrêter l’environnement d’exécution
+
+Décrire les étapes de développement d’une application corba ?
+	1. Ecriture de l'interface de l'objet en IDL
+	2. Compilation de l'IDL • Génération des modules stub et skeleton
+	3. Implantation de l'objet • Dérivation d'une classe depuis le skeleton généré
+	4. Rédaction ou génération du code de l'application serveur • Ce code sert à lancer l'objet et à le mettre à
+	disposition des différentes applications clientes
+	5. Compilation du serveur • Génération de l'exécutable de l'application serveur avec liaison au module ORB
+	6. Réalisation de l'application cliente • Cette application se connecte à l'objet distant pour lui
+	demander l'exécution de méthodes
+	7. Compilation du client • Tout comme le serveur, cette application doit inclure l'ORB
+
+*quelle est l’utilité d’utiliser plus d’un portable object adapter (POA à l’interieur d’une meme application
+serveur ?:
+Séparer les POA suivant les métiers et chaque POA gère un ensemble de servants.
+
+Expliquez la différence entre objet distribué, servant, object id et IOR ?
+-IOR :suite d’octets identifiant l’objet chez le serveur
+-Object id : suite d’octets identifiant l’objet chez le POA
+-Servant : entité réelle programmée en un langage, implante un objet distribué et évolue dans le cadre d’un serveur.
+
+-Objet distribué : entité virtuelle qui peut être localisée par un bus ORB et qui reçoit les requêtes clients qui lui sont destinés.
